@@ -30,4 +30,16 @@ public class ClienteService {
         return clienteRepository.findAll();
     }
 
+    public Cliente atualizarCliente(Integer id, Cliente clienteAtualizado) {
+
+        Cliente cliente = buscarClientePorId(id);
+        cliente.setNome(clienteAtualizado.getNome());
+        cliente.setCpf(clienteAtualizado.getCpf());
+        cliente.setDataNascimento(clienteAtualizado.getDataNascimento());
+        cliente.setStatusBloqueio(clienteAtualizado.getStatusBloqueio());
+        cliente.setLimiteCredito(clienteAtualizado.getLimiteCredito());
+        return clienteRepository.save(cliente);
+
+    }
+
 }
