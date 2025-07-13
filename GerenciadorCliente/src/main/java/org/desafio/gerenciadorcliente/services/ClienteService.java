@@ -42,4 +42,8 @@ public class ClienteService {
 
     }
 
+    public List<Cliente> listarBloqueados() {
+        return clienteRepository.findByStatusBloqueio("BLOQUEADO");
+    }
+
 }

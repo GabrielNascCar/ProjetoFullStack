@@ -41,4 +41,10 @@ public class ClienteController {
         return ResponseEntity.ok(clienteService.atualizarCliente(id, clienteAtualizado));
     }
 
+    @GetMapping("/bloqueados")
+    public ResponseEntity<List<Cliente>> listarBloqueados() {
+        List<Cliente> clientesBloqueados = clienteService.listarBloqueados();
+        return ResponseEntity.ok(clientesBloqueados);
+    }
+
 }
