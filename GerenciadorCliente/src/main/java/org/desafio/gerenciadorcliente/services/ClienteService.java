@@ -18,4 +18,9 @@ public class ClienteService {
         clienteRepository.save(cliente);
     }
 
+    public Cliente buscarClientePorId(Integer id) {
+        Cliente cliente = clienteRepository.findById(id).orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
+        return cliente;
+    }
+
 }
