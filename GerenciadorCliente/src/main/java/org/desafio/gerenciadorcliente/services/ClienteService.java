@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 public class ClienteService {
 
@@ -21,6 +23,11 @@ public class ClienteService {
     public Cliente buscarClientePorId(Integer id) {
         Cliente cliente = clienteRepository.findById(id).orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
         return cliente;
+    }
+
+    @Transactional
+    public List<Cliente> listarClientes() {
+        return clienteRepository.findAll();
     }
 
 }

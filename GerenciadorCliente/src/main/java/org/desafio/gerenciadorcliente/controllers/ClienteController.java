@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/clientes")
 public class ClienteController {
@@ -24,6 +26,11 @@ public class ClienteController {
     public ResponseEntity<Cliente> buscarPorId(@PathVariable Integer id) {
         Cliente cliente = clienteService.buscarClientePorId(id);
         return ResponseEntity.ok(cliente);
+    }
+
+    @GetMapping("/listar-todos")
+    public ResponseEntity<List<Cliente>> listarTodos() {
+        return ResponseEntity.ok(clienteService.listarClientes());
     }
 
 }
