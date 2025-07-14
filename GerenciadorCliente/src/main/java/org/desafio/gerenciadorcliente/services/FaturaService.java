@@ -30,6 +30,7 @@ public class FaturaService {
         return new FaturaDTO(
                 fatura.getId(),
                 fatura.getCliente().getId(),
+                fatura.getCliente().getNome(),
                 fatura.getDataVencimento(),
                 fatura.getDataPagamento(),
                 fatura.getValor(),

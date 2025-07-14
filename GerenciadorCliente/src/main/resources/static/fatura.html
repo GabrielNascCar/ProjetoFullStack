@@ -114,7 +114,7 @@
 
             if (faturas.length > 0) {
                 document.getElementById('tituloCliente').textContent =
-                    `Faturas de ${faturas[0].cliente.nome}`;
+                    `Faturas de ${faturas[0].clienteNome || 'Cliente'}`;
             }
 
             const tbody = document.querySelector('#faturasTable tbody');

@@ -15,6 +15,7 @@ public class FaturaDTO {
 
     private Long id;
     private Integer clienteId;
+    private String clienteNome;
     private LocalDate dataVencimento;
     private LocalDate dataPagamento;
     private Double valor;
