@@ -1,5 +1,6 @@
 package org.desafio.gerenciadorcliente.services;
 
+import org.desafio.gerenciadorcliente.exception.ClienteNaoEncontradoException;
 import org.desafio.gerenciadorcliente.model.Cliente;
 import org.desafio.gerenciadorcliente.repositories.ClienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ public class ClienteService {
     }
 
     public Cliente buscarClientePorId(Integer id) {
-        Cliente cliente = clienteRepository.findById(id).orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
+        Cliente cliente = clienteRepository.findById(id).orElseThrow(() -> new ClienteNaoEncontradoException(id));
         return cliente;
     }
 

@@ -1,5 +1,7 @@
 package org.desafio.gerenciadorcliente.services;
 
+import org.desafio.gerenciadorcliente.exception.ClienteNaoEncontradoException;
+import org.desafio.gerenciadorcliente.exception.FaturaNaoEncontradaException;
 import org.desafio.gerenciadorcliente.model.Cliente;
 import org.desafio.gerenciadorcliente.model.Fatura;
 import org.desafio.gerenciadorcliente.repositories.ClienteRepository;
@@ -51,7 +53,7 @@ public class FaturaService {
     }
 
     public void bloquearCliente(Cliente cliente) {
-        Cliente cliente1 = clienteRepository.findById(cliente.getId()).orElseThrow();
+        Cliente cliente1 = clienteRepository.findById(cliente.getId()).orElseThrow(() -> new ClienteNaoEncontradoException(cliente.getId()));
         cliente1.setStatusBloqueio("BLOQUEADO");
         cliente1.setLimiteCredito(0.0);
         clienteRepository.save(cliente1);
@@ -72,7 +74,7 @@ public class FaturaService {
     }
 
     public Fatura buscarPorId(Integer id) {
-        Fatura fatura = faturaRepository.findById(id).orElseThrow(() -> new RuntimeException("Fatura não existe"));
+        Fatura fatura = faturaRepository.findById(id).orElseThrow(() -> new FaturaNaoEncontradaException(id));
         atualizarStatusFatura(fatura);
         return fatura;
     }
