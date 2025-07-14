@@ -5,6 +5,7 @@ import org.desafio.gerenciadorcliente.model.Fatura;
 import org.desafio.gerenciadorcliente.repositories.ClienteRepository;
 import org.desafio.gerenciadorcliente.repositories.FaturaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -83,6 +84,18 @@ public class FaturaService {
         fatura.setDataPagamento(LocalDate.now());
         faturaRepository.save(fatura);
         return fatura;
+    }
+
+    @Scheduled(cron = "*/30 * * * * *")
+    public void verificarFaturasAtrasadas() {
+        List<Fatura> faturas = faturaRepository.findByStatusNot("PAGO");
+        faturas.forEach(fatura -> {
+            atualizarStatusFatura(fatura);
+            faturaRepository.save(fatura);
+        });
+
+        System.out.println("Verificação concluída. Faturas processadas: " + faturas.size());
+
     }
 
 }
