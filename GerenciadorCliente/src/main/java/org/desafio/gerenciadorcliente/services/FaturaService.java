@@ -1,5 +1,6 @@
 package org.desafio.gerenciadorcliente.services;
 
+import org.desafio.gerenciadorcliente.DTO.FaturaDTO;
 import org.desafio.gerenciadorcliente.exception.ClienteNaoEncontradoException;
 import org.desafio.gerenciadorcliente.exception.FaturaNaoEncontradaException;
 import org.desafio.gerenciadorcliente.model.Cliente;
@@ -25,11 +26,35 @@ public class FaturaService {
     @Autowired
     private ClienteRepository clienteRepository;
 
+    private FaturaDTO toDTO(Fatura fatura) {
+        return new FaturaDTO(
+                fatura.getId(),
+                fatura.getCliente().getId(),
+                fatura.getDataVencimento(),
+                fatura.getDataPagamento(),
+                fatura.getValor(),
+                fatura.getStatus()
+        );
+    }
+
+    private Fatura toEntity(FaturaDTO faturaDTO) {
+        Fatura fatura = new Fatura();
+        fatura.setId(faturaDTO.getId());
+        fatura.setCliente(clienteRepository.findById(faturaDTO.getClienteId())
+                .orElseThrow(() -> new ClienteNaoEncontradoException(faturaDTO.getClienteId())));
+        fatura.setDataVencimento(faturaDTO.getDataVencimento());
+        fatura.setDataPagamento(faturaDTO.getDataPagamento());
+        fatura.setValor(faturaDTO.getValor());
+        fatura.setStatus(faturaDTO.getStatus());
+        return fatura;
+    }
+
     @Transactional
-    public Fatura salvarFatura(Fatura fatura) {
+    public FaturaDTO salvarFatura(FaturaDTO faturaDTO) {
+        Fatura fatura = toEntity(faturaDTO);
         atualizarStatusFatura(fatura);
         faturaRepository.save(fatura);
-        return fatura;
+        return toDTO(fatura);
     }
 
     private void atualizarStatusFatura(Fatura fatura) {

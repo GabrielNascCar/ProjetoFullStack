@@ -1,8 +1,10 @@
 package org.desafio.gerenciadorcliente.controllers;
 
+import org.desafio.gerenciadorcliente.DTO.FaturaDTO;
 import org.desafio.gerenciadorcliente.model.Fatura;
 import org.desafio.gerenciadorcliente.services.FaturaService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,9 +18,9 @@ public class FaturaController {
     private FaturaService faturaService;
 
     @PostMapping
-    public ResponseEntity<Void> criar(@RequestBody Fatura fatura) {
-        faturaService.salvarFatura(fatura);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<FaturaDTO> criar(@RequestBody FaturaDTO faturaDTO) {
+        FaturaDTO faturaSalva = faturaService.salvarFatura(faturaDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(faturaSalva);
     }
 
     @GetMapping("/{clienteId}")
