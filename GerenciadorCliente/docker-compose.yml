@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  mysql-db:
+    image: mysql:8.0
+    container_name: mysql-db
+    environment:
+      MYSQL_ROOT_PASSWORD: nascimento1  # mesma senha do seu application.properties
+      MYSQL_DATABASE: BancoDados        # mesmo nome do seu banco
+    ports:
+      - "3308:3306"  # porta padrão do MySQL
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 10s
+      retries: 5
+
+  backend-app:
+    build: .
+    container_name: backend-app
+    depends_on:
+      mysql-db:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/BancoDados?createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: nascimento1
+    ports:
+      - "8080:8080"  # porta padrão da aplicação
+
+volumes:
+  mysql-data:
