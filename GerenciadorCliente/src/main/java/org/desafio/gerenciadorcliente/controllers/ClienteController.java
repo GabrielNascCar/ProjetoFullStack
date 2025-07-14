@@ -25,8 +25,8 @@ public class ClienteController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Cliente> buscarPorId(@PathVariable Integer id) {
-        Cliente cliente = clienteService.buscarClientePorId(id);
+    public ResponseEntity<ClienteDTO> buscarPorId(@PathVariable Integer id) {
+        ClienteDTO cliente = clienteService.buscarClientePorId(id);
         return ResponseEntity.ok(cliente);
     }
 
@@ -36,11 +36,11 @@ public class ClienteController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Cliente> atualizar(
+    public ResponseEntity<ClienteDTO> atualizarCliente(
             @PathVariable Integer id,
-            @RequestBody Cliente clienteAtualizado) {
-
-        return ResponseEntity.ok(clienteService.atualizarCliente(id, clienteAtualizado));
+            @RequestBody ClienteDTO clienteDTO) {
+        ClienteDTO clienteAtualizado = clienteService.atualizarCliente(id, clienteDTO);
+        return ResponseEntity.ok(clienteAtualizado);
     }
 
     @GetMapping("/bloqueados")

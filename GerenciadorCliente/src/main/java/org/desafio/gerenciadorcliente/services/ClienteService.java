@@ -38,6 +38,20 @@ public class ClienteService {
         );
     }
 
+    public ClienteDTO atualizarCliente(Integer id, ClienteDTO clienteDTO) {
+        Cliente clienteExistente = clienteRepository.findById(id)
+                .orElseThrow(() -> new ClienteNaoEncontradoException(id));
+
+        clienteExistente.setNome(clienteDTO.getNome());
+        clienteExistente.setCpf(clienteDTO.getCpf());
+        clienteExistente.setDataNascimento(clienteDTO.getDataNascimento());
+        clienteExistente.setStatusBloqueio(clienteDTO.getStatusBloqueio());
+        clienteExistente.setLimiteCredito(clienteDTO.getLimiteCredito());
+
+        Cliente clienteAtualizado = clienteRepository.save(clienteExistente);
+        return toDTO(clienteAtualizado);
+    }
+
     @Transactional
     public ClienteDTO criarCliente(ClienteDTO clienteDTO) {
         Cliente cliente = toEntity(clienteDTO);
@@ -46,26 +60,15 @@ public class ClienteService {
         return toDTO(clienteSalvo);
     }
 
-    public Cliente buscarClientePorId(Integer id) {
-        Cliente cliente = clienteRepository.findById(id).orElseThrow(() -> new ClienteNaoEncontradoException(id));
-        return cliente;
+    public ClienteDTO buscarClientePorId(Integer id) {
+        Cliente cliente = clienteRepository.findById(id)
+                .orElseThrow(() -> new ClienteNaoEncontradoException(id));
+        return toDTO(cliente);
     }
 
     @Transactional
     public List<Cliente> listarClientes() {
         return clienteRepository.findAll();
-    }
-
-    public Cliente atualizarCliente(Integer id, Cliente clienteAtualizado) {
-
-        Cliente cliente = buscarClientePorId(id);
-        cliente.setNome(clienteAtualizado.getNome());
-        cliente.setCpf(clienteAtualizado.getCpf());
-        cliente.setDataNascimento(clienteAtualizado.getDataNascimento());
-        cliente.setStatusBloqueio(clienteAtualizado.getStatusBloqueio());
-        cliente.setLimiteCredito(clienteAtualizado.getLimiteCredito());
-        return clienteRepository.save(cliente);
-
     }
 
     public List<Cliente> listarBloqueados() {
