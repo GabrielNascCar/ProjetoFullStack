@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 
 @Service
 public class FaturaService {
@@ -53,6 +54,12 @@ public class FaturaService {
         cliente1.setStatusBloqueio("BLOQUEADO");
         cliente1.setLimiteCredito(0.0);
         clienteRepository.save(cliente1);
+    }
+
+    public List<Fatura> listarPorCliente(Long clienteId) {
+        List<Fatura> faturas = faturaRepository.findByClienteId(clienteId);
+        faturas.forEach(this::atualizarStatusFatura);
+        return faturas;
     }
 
 
