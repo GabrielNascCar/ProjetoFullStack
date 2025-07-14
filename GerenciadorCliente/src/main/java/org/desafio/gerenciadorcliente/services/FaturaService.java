@@ -90,11 +90,13 @@ public class FaturaService {
                 .toList();
     }
 
-    public List<Fatura> listarAtrasadas() {
+    public List<FaturaDTO> listarAtrasadas() {
         List<Fatura> faturas = faturaRepository.findByStatusNot("PAGO");
         faturas.forEach(this::atualizarStatusFatura);
+
         return faturas.stream()
                 .filter(f -> "ATRASADA".equals(f.getStatus()))
+                .map(this::toDTO)
                 .toList();
     }
 

@@ -30,8 +30,9 @@ public class FaturaController {
     }
 
     @GetMapping("/atrasadas")
-    public List<Fatura> listarAtrasadas() {
-        return faturaService.listarAtrasadas();
+    public ResponseEntity<List<FaturaDTO>> listarAtrasadas() {
+        List<FaturaDTO> faturasAtrasadas = faturaService.listarAtrasadas();
+        return ResponseEntity.ok(faturasAtrasadas);
     }
 
     @GetMapping("/fatura/{id}")
