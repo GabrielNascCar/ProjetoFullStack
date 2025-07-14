@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fintech - Faturas do Cliente</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        .status-paga {
+            color: green;
+            font-weight: bold;
+        }
+        .status-atrasada {
+            color: red;
+            font-weight: bold;
+        }
+        .status-aberta {
+            color: orange;
+            font-weight: bold;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        button:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+        }
+        .voltar {
+            background-color: #6c757d;
+            margin-bottom: 20px;
+        }
+        .voltar:hover {
+            background-color: #5a6268;
+        }
+    </style>
+</head>
+<body>
+<button class="voltar" onclick="window.location.href='index.html'">← Voltar</button>
+<h1 id="tituloCliente">Faturas do Cliente</h1>
+
+<table id="faturasTable">
+    <thead>
+    <tr>
+        <th>Valor</th>
+        <th>Data de Vencimento</th>
+        <th>Status</th>
+        <th>Data de Pagamento</th>
+        <th>Ações</th>
+    </tr>
+    </thead>
+    <tbody>
+
+    </tbody>
+</table>
+
+<script>
+    const API_URL = 'http://localhost:8080';
+    const clienteId = new URLSearchParams(window.location.search).get('clienteId');
+
+    async function carregarFaturas() {
+        try {
+            if (!clienteId) {
+                console.error('ID do cliente não encontrado na URL');
+                alert('ID do cliente não foi especificado. Acesse esta página através do sistema.');
+                window.location.href = 'index.html';
+                return;
+            }
+            console.log(`Buscando faturas para cliente ${clienteId}...`);
+
+            const response = await fetch(`${API_URL}/faturas/${clienteId}`);
+
+            if (!response.ok) {
+                const errorDetail = await response.text();
+                throw new Error(`Erro ${response.status}: ${errorDetail}`);
+            }
+
+            const faturas = await response.json();
+            console.log('Faturas recebidas:', faturas);
+
+            if (faturas.length > 0) {
+                document.getElementById('tituloCliente').textContent =
+                    `Faturas de ${faturas[0].cliente.nome}`;
+            }
+
+            const tbody = document.querySelector('#faturasTable tbody');
+            tbody.innerHTML = faturas.map(fatura => `
+        <tr>
+          <td>R$ ${fatura.valor.toFixed(2)}</td>
+          <td>${formatarData(fatura.dataVencimento)}</td>
+          <td>${formatarStatus(fatura.status)}</td>
+          <td>${fatura.dataPagamento ? formatarData(fatura.dataPagamento) : '-'}</td>
+          <td>
+            <button onclick="registrarPagamento(${fatura.id})"
+                    ${fatura.status === 'PAGO' ? 'disabled' : ''}
+                    class="${fatura.status === 'PAGO' ? '' : 'btn-pagar'}">
+              ${fatura.status === 'PAGO' ? 'Pago' : 'Registrar Pagamento'}
+            </button>
+          </td>
+        </tr>
+      `).join('');
+
+        } catch (error) {
+            console.error('Erro detalhado:', error);
+            alert(`Falha ao carregar faturas:\n${error.message}\n\nVerifique o console (F12) para detalhes`);
+        }
+    }
+
+    async function registrarPagamento(faturaId) {
+        try {
+            const response = await fetch(`${API_URL}/faturas/${faturaId}/pagamento`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                const errorDetail = await response.text();
+                throw new Error(errorDetail || 'Erro ao registrar pagamento');
+            }
+
+            alert('Pagamento registrado com sucesso!');
+            carregarFaturas();
+        } catch (error) {
+            console.error('Erro:', error);
+            alert(`Falha ao registrar pagamento:\n${error.message}`);
+        }
+    }
+
+    function formatarData(data) {
+        return new Date(data).toLocaleDateString('pt-BR');
+    }
+
+    function formatarStatus(status) {
+        const statusMap = {
+            'PAGO': '<span class="status-paga">Paga</span>',
+            'ATRASADA': '<span class="status-atrasada">Atrasada</span>',
+            'ABERTA': '<span class="status-aberta">Aberta</span>'
+        };
+        return statusMap[status] || status;
+    }
+
+    window.onload = carregarFaturas;
+</script>
+</body>
+</html>
