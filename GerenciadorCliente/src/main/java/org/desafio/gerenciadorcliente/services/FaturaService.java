@@ -84,10 +84,10 @@ public class FaturaService {
         clienteRepository.save(cliente1);
     }
 
-    public List<Fatura> listarPorCliente(Long clienteId) {
-        List<Fatura> faturas = faturaRepository.findByClienteId(clienteId);
-        faturas.forEach(this::atualizarStatusFatura);
-        return faturas;
+    public List<FaturaDTO> listarPorCliente(Long clienteId) {
+        return faturaRepository.findByClienteId(clienteId).stream()
+                .map(this::toDTO)
+                .toList();
     }
 
     public List<Fatura> listarAtrasadas() {

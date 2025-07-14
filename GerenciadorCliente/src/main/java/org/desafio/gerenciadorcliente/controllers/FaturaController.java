@@ -24,8 +24,9 @@ public class FaturaController {
     }
 
     @GetMapping("/{clienteId}")
-    public List<Fatura> listarPorCliente(@PathVariable Long clienteId) {
-        return faturaService.listarPorCliente(clienteId);
+    public ResponseEntity<List<FaturaDTO>> listarPorCliente(@PathVariable Long clienteId) {
+        List<FaturaDTO> faturas = faturaService.listarPorCliente(clienteId);
+        return ResponseEntity.ok(faturas);
     }
 
     @GetMapping("/atrasadas")
