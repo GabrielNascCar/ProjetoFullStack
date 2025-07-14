@@ -34,14 +34,16 @@ public class FaturaController {
         return faturaService.listarAtrasadas();
     }
 
-    @GetMapping("fatura/{id}")
-    public Fatura buscarPorId(@PathVariable Integer id) {
-        return faturaService.buscarPorId(id);
+    @GetMapping("/fatura/{id}")
+    public ResponseEntity<FaturaDTO> buscarPorId(@PathVariable Integer id) {
+        FaturaDTO fatura = faturaService.buscarPorId(id);
+        return ResponseEntity.ok(fatura);
     }
 
     @PutMapping("/{id}/pagamento")
-    public Fatura registrarPagamento(@PathVariable Integer id) {
-        return faturaService.registrarPagamento(id);
+    public ResponseEntity<FaturaDTO> registrarPagamento(@PathVariable Integer id) {
+        FaturaDTO fatura = faturaService.registrarPagamento(id);
+        return ResponseEntity.ok(fatura);
     }
 
 }

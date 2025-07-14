@@ -98,19 +98,20 @@ public class FaturaService {
                 .toList();
     }
 
-    public Fatura buscarPorId(Integer id) {
-        Fatura fatura = faturaRepository.findById(id).orElseThrow(() -> new FaturaNaoEncontradaException(id));
-        atualizarStatusFatura(fatura);
-        return fatura;
+    public FaturaDTO buscarPorId(Integer id) {
+        Fatura fatura = faturaRepository.findById(id)
+                .orElseThrow(() -> new FaturaNaoEncontradaException(id));
+        return toDTO(fatura);
     }
 
     @Transactional
-    public Fatura registrarPagamento(Integer id) {
-        Fatura fatura = buscarPorId(id);
+    public FaturaDTO registrarPagamento(Integer id) {
+        Fatura fatura = faturaRepository.findById(id)
+                .orElseThrow(() -> new FaturaNaoEncontradaException(id));
         fatura.setStatus("PAGO");
         fatura.setDataPagamento(LocalDate.now());
         faturaRepository.save(fatura);
-        return fatura;
+        return toDTO(fatura);
     }
 
     @Scheduled(cron = "*/30 * * * * *")
