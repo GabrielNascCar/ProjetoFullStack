@@ -1,5 +1,6 @@
 package org.desafio.gerenciadorcliente.controllers;
 
+import org.desafio.gerenciadorcliente.DTO.ClienteDTO;
 import org.desafio.gerenciadorcliente.model.Cliente;
 import org.desafio.gerenciadorcliente.services.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +19,9 @@ public class ClienteController {
     private ClienteService clienteService;
 
     @PostMapping
-    public ResponseEntity<Void> create(@RequestBody Cliente obj){
-        clienteService.salvarCliente(obj);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+    public ResponseEntity<ClienteDTO> criarCliente(@RequestBody ClienteDTO clienteDTO) {
+        ClienteDTO novoCliente = clienteService.criarCliente(clienteDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(novoCliente);
     }
 
     @GetMapping("/{id}")

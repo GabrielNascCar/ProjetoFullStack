@@ -1,5 +1,6 @@
 package org.desafio.gerenciadorcliente.services;
 
+import org.desafio.gerenciadorcliente.DTO.ClienteDTO;
 import org.desafio.gerenciadorcliente.exception.ClienteNaoEncontradoException;
 import org.desafio.gerenciadorcliente.model.Cliente;
 import org.desafio.gerenciadorcliente.repositories.ClienteRepository;
@@ -15,10 +16,34 @@ public class ClienteService {
     @Autowired
     private ClienteRepository clienteRepository;
 
+    private Cliente toEntity(ClienteDTO dto) {
+        Cliente cliente = new Cliente();
+        cliente.setId(dto.getId());
+        cliente.setNome(dto.getNome());
+        cliente.setCpf(dto.getCpf());
+        cliente.setDataNascimento(dto.getDataNascimento());
+        cliente.setStatusBloqueio(dto.getStatusBloqueio());
+        cliente.setLimiteCredito(dto.getLimiteCredito());
+        return cliente;
+    }
+
+    private ClienteDTO toDTO(Cliente cliente) {
+        return new ClienteDTO(
+                cliente.getId(),
+                cliente.getNome(),
+                cliente.getCpf(),
+                cliente.getDataNascimento(),
+                cliente.getStatusBloqueio(),
+                cliente.getLimiteCredito()
+        );
+    }
+
     @Transactional
-    public void salvarCliente(Cliente cliente) {
+    public ClienteDTO criarCliente(ClienteDTO clienteDTO) {
+        Cliente cliente = toEntity(clienteDTO);
         cliente.setStatusBloqueio("ATIVO");
-        clienteRepository.save(cliente);
+        Cliente clienteSalvo = clienteRepository.save(cliente);
+        return toDTO(clienteSalvo);
     }
 
     public Cliente buscarClientePorId(Integer id) {
