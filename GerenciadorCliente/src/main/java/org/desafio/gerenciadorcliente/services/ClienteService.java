@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ClienteService {
@@ -66,13 +67,17 @@ public class ClienteService {
         return toDTO(cliente);
     }
 
-    @Transactional
-    public List<Cliente> listarClientes() {
-        return clienteRepository.findAll();
+    @Transactional(readOnly = true)
+    public List<ClienteDTO> listarClientes() {
+        return clienteRepository.findAll().stream()
+                .map(this::toDTO)
+                .collect(Collectors.toList());
     }
 
-    public List<Cliente> listarBloqueados() {
-        return clienteRepository.findByStatusBloqueio("BLOQUEADO");
+    public List<ClienteDTO> listarBloqueados() {
+        return clienteRepository.findByStatusBloqueio("BLOQUEADO").stream()
+                .map(this::toDTO)
+                .collect(Collectors.toList());
     }
 
 }

@@ -31,8 +31,9 @@ public class ClienteController {
     }
 
     @GetMapping("/listar-todos")
-    public ResponseEntity<List<Cliente>> listarTodos() {
-        return ResponseEntity.ok(clienteService.listarClientes());
+    public ResponseEntity<List<ClienteDTO>> listarTodos() {
+        List<ClienteDTO> clientes = clienteService.listarClientes();
+        return ResponseEntity.ok(clientes);
     }
 
     @PutMapping("/{id}")
@@ -44,9 +45,9 @@ public class ClienteController {
     }
 
     @GetMapping("/bloqueados")
-    public ResponseEntity<List<Cliente>> listarBloqueados() {
-        List<Cliente> clientesBloqueados = clienteService.listarBloqueados();
-        return ResponseEntity.ok(clientesBloqueados);
+    public ResponseEntity<List<ClienteDTO>> listarBloqueados() {
+        List<ClienteDTO> bloqueados = clienteService.listarBloqueados();
+        return ResponseEntity.ok(bloqueados);
     }
 
 }
