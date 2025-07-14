@@ -26,4 +26,9 @@ public class FaturaController {
         return faturaService.listarPorCliente(clienteId);
     }
 
+    @GetMapping("/atrasadas")
+    public List<Fatura> listarAtrasadas() {
+        return faturaService.listarAtrasadas();
+    }
+
 }

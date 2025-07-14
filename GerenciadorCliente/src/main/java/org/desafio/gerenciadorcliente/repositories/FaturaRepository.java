@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface FaturaRepository extends JpaRepository<Fatura, Integer> {
     List<Fatura> findByClienteId(Long clienteId);
+    List<Fatura> findByStatusNot(String status);
 }

@@ -62,5 +62,13 @@ public class FaturaService {
         return faturas;
     }
 
+    public List<Fatura> listarAtrasadas() {
+        List<Fatura> faturas = faturaRepository.findByStatusNot("PAGO");
+        faturas.forEach(this::atualizarStatusFatura);
+        return faturas.stream()
+                .filter(f -> "ATRASADA".equals(f.getStatus()))
+                .toList();
+    }
+
 
 }
