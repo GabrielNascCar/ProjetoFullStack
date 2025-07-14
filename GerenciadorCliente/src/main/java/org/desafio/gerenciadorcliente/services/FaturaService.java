@@ -70,5 +70,11 @@ public class FaturaService {
                 .toList();
     }
 
+    public Fatura buscarPorId(Integer id) {
+        Fatura fatura = faturaRepository.findById(id).orElseThrow(() -> new RuntimeException("Fatura não existe"));
+        atualizarStatusFatura(fatura);
+        return fatura;
+    }
+
 
 }

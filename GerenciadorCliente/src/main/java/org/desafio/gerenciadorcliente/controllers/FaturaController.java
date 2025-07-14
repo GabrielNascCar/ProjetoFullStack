@@ -31,4 +31,9 @@ public class FaturaController {
         return faturaService.listarAtrasadas();
     }
 
+    @GetMapping("fatura/{id}")
+    public Fatura buscarPorId(@PathVariable Integer id) {
+        return faturaService.buscarPorId(id);
+    }
+
 }
