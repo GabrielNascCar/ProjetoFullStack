@@ -36,4 +36,9 @@ public class FaturaController {
         return faturaService.buscarPorId(id);
     }
 
+    @PutMapping("/{id}/pagamento")
+    public Fatura registrarPagamento(@PathVariable Integer id) {
+        return faturaService.registrarPagamento(id);
+    }
+
 }

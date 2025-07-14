@@ -76,5 +76,13 @@ public class FaturaService {
         return fatura;
     }
 
+    @Transactional
+    public Fatura registrarPagamento(Integer id) {
+        Fatura fatura = buscarPorId(id);
+        fatura.setStatus("PAGO");
+        fatura.setDataPagamento(LocalDate.now());
+        faturaRepository.save(fatura);
+        return fatura;
+    }
 
 }
